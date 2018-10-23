@@ -1,0 +1,21 @@
+
+language: python
+python:
+  - "3.4"
+
+cache: pip
+
+install:
+  - pip install -r notification_microservice/requirements/dev.txt
+
+virtualenv:
+  system_site_packages: true
+
+stages:
+  - test
+
+jobs:
+  include:
+    - stage: "Tests"
+      name: "Unit Tests"
+      script: sh run-tests.sh

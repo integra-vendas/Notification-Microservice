@@ -1,0 +1,77 @@
+stages:
+  - test
+  - publish
+  - deploy
+
+unit tests:
+  image: python:3.5.6-slim-stretch
+  before_script:
+    - pip install -r notification_microservice/requirements/dev.txt
+  stage: test
+  script:
+    - sh run-tests.sh
+
+publish codecov:
+  image: python:3.5.6-slim-stretch
+  before_script:
+    - pip install -r notification_microservice/requirements/dev.txt
+  only:
+    - master
+  stage: publish
+  dependencies:
+    - unit tests
+  script:
+    - sh run-tests.sh
+    - cd notification_microservice && codecov -t ${CODECOV_TOKEN}
+
+publish image to production:
+  image: docker:stable
+  services:
+    - docker:dind
+    - docker:python:3.5.6-slim-stretch
+  before_script:
+    - docker info
+  only:
+    - tags
+  stage: publish
+  script:
+    - sh run-publish-docker.sh production
+
+publish image to staging:
+  image: docker:stable
+  services:
+    - docker:dind
+    - docker:python:3.5.6-slim-stretch
+  before_script:
+    - docker info
+  only:
+    - dev
+  stage: publish
+  script:
+    - sh run-publish-docker.sh staging
+
+deploy to production:
+  image: python:3.5.6-slim-stretch
+  only:
+    - tags
+  stage: deploy
+  script:
+    - sh install-kubectl.sh
+    - sh run-deploy.sh production
+
+# deploy to staging:
+#   image: python:3.5.6-slim-stretch
+#   only:
+#     - dev
+#   stage: deploy
+#   script:
+#     - sh install-kubectl.sh
+#     - sh run-deploy.sh staging
+
+deploy to heroku:
+  stage: deploy
+  script:
+  - gem install dpl
+  - cd notification_microservice && dpl --provider=heroku --app=notification-microservice --api-key=$HEROKU_DEV_KEY
+  only:
+  - dev

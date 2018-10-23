@@ -1,0 +1,4 @@
+[run]
+omit = 
+    notification_microservice/*
+    manage.py

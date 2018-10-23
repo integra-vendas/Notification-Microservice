@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+  web:
+    build: .
+    container_name: "notification-microservice"
+    command: bash -c "sh run-django.sh"
+    volumes:
+      - .:/code
+    ports:
+      - 8003:8000
+    networks:
+      - api-backend
+
+networks:
+  api-backend:
+    external:
+      name: api-backend
