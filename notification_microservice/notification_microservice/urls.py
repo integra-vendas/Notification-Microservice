@@ -21,4 +21,5 @@ from .views import status
 urlpatterns = [
     path('', status),
     path('admin/', admin.site.urls),
+    path('api/', include('notifications.urls'))
 ]
