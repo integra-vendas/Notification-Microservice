@@ -56,5 +56,5 @@ def send_push_message(request):
         return Response("Recipient not registered", status.HTTP_404_NOT_FOUND)
 
     task = {"token": user_token, "title": title, "message": message}
-    requests.post('http://192.168.1.16:8003/notifications/', json=task)
+    requests.post(settings.NOTIFICATIONS_DOMAIN + '/notifications/', json=task)
     return Response(status.HTTP_200_OK)
