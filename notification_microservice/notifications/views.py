@@ -82,4 +82,4 @@ def send_push_message(request):
     except PushResponseError:
         return Response("Recipient not registered", status.HTTP_404_NOT_FOUND)
 
-    return Response(status.HTTP_200_OK)
+    return Response(status=HTTP_200_OK)
