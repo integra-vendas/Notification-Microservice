@@ -32,8 +32,8 @@ class UserList(generics.ListCreateAPIView):
     queryset = ProfileToken.objects.all()
     serializer_class = ProfileTokenSerializer
 
-@api_view(["POST"])
 @permission_classes((AllowAny, ))
+@api_view(["POST"])
 def save_user_token(request):
     user_id = request.data.get('user_id')
     user_token = request.data.get('user_token')
@@ -56,8 +56,9 @@ def save_user_token(request):
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
 def send_push_message(request):
-    user_token = request.data['user_token']
-    # sender_id = request.data["sender_id"]
+    user_id = request.data.get('user_id')
+    user_profile = ProfileToken.objects.get(user_id = user_id)
+    user_token = user_profile.user_token
     title = request.data['title']
     message = request.data['message']
 
@@ -81,6 +82,4 @@ def send_push_message(request):
     except PushResponseError:
         return Response("Recipient not registered", status.HTTP_404_NOT_FOUND)
 
-    task = {"token": user_token, "title": title, "message": message}
-    requests.post(settings.NOTIFICATIONS_DOMAIN + '/notifications/', json=task)
     return Response(status.HTTP_200_OK)
