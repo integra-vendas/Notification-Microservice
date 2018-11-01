@@ -1,8 +1,7 @@
 from rest_framework import serializers
-from .models import BasicNotifications
+from .models import ProfileToken
 
-
-class BasicNotificationsSerializer(serializers.ModelSerializer):
+class ProfileTokenSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BasicNotifications
+        model = ProfileToken
         fields = '__all__'

@@ -1,6 +1,5 @@
 from django.db import models
 
-class BasicNotifications(models.Model):
-    token = models.CharField(max_length=50)
-    title = models.CharField(max_length=20)
-    message = models.CharField(max_length=50)
+class ProfileToken(models.Model):
+    user_id = models.IntegerField(default=0)
+    user_token = models.CharField(max_length=50)
