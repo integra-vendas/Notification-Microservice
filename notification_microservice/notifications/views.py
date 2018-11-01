@@ -8,24 +8,50 @@ from exponent_server_sdk import MessageRateExceededError
 from requests.exceptions import ConnectionError
 from requests.exceptions import HTTPError
 from django.shortcuts import render
-from .serializers import BasicNotificationsSerializer
-from notifications.models import BasicNotifications
+from .serializers import ProfileTokenSerializer
+from notifications.models import ProfileToken
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework import status
 from django.conf import settings
 import requests
+from rest_framework import generics
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_400_BAD_REQUEST,
+    HTTP_403_FORBIDDEN,
+    HTTP_404_NOT_FOUND,
+    HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+    HTTP_502_BAD_GATEWAY,
+    HTTP_503_SERVICE_UNAVAILABLE
+)
 
-class BasicNotificationsViewSet(ModelViewSet):
-    queryset = BasicNotifications.objects.all()
-    serializer_class = BasicNotificationsSerializer
+class UserList(generics.ListCreateAPIView):
+    queryset = ProfileToken.objects.all()
+    serializer_class = ProfileTokenSerializer
 
-    def get_queryset(self):
-        token = self.request.query_params.get("token")
-        return BasicNotifications.objects.filter(token=token)
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def save_user_token(request):
+    user_id = request.data.get('user_id')
+    user_token = request.data.get('user_token')
+
+    if (user_id == None or user_token == None):
+        return Response({'error':'Usuário não identificado.'}, status=HTTP_400_BAD_REQUEST)
+
+    try:
+        user = ProfileToken.objects.get(user_id = user_id)
+        user.user_token = user_token
+        user.save()
+    except:
+        ProfileToken.objects.create(
+            user_id = user_id,
+            user_token = user_token
+        )
+
+    return Response(status=HTTP_200_OK)
 
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
