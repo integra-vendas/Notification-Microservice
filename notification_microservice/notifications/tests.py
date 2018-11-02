@@ -37,3 +37,17 @@ class ProfileTokenTest(APITestCase):
 
         self.assertEqual(profile2.user_token, 'OtherToken')
         self.assertEqual(profile2.user_id, 2)
+
+    def test_update_profile(self):
+        #Create a profile to update
+        ProfileToken.objects.create(
+                            user_token = 'ThisIsAToken',
+                            user_id = 1)
+
+        #Checking UPDATE existing profile
+        profile = {'user_token': 'ThisISOtherToken', 'user_id': '1'}
+        response = self.client.post('/api/save_user_token/', profile)
+        self.assertEqual(response.status_code, 200)
+
+        profile1 = ProfileToken.objects.all()[0]
+        self.assertEqual(profile1.user_token, 'ThisISOtherToken')
