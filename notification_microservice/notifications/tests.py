@@ -3,7 +3,7 @@ from .models import ProfileToken
 from rest_framework.test import APITestCase
 
 # Create your tests here.
-class ProfileTokenTest(APITestCase):
+class SaveUserTokenTest(APITestCase):
     def test_without_params(self):
         #Checking POST without any
         profile = {'test': 'test'}
@@ -51,3 +51,13 @@ class ProfileTokenTest(APITestCase):
 
         profile1 = ProfileToken.objects.all()[0]
         self.assertEqual(profile1.user_token, 'ThisISOtherToken')
+
+class SendPushMessageTest(APITestCase):
+    def test_invalid_token_push(self):
+        ProfileToken.objects.create(
+            user_id = 1,
+            user_token = 'notValidToken')
+
+        request = {'user_id': '1', 'title': 'ThisIsATitle', 'message': 'This is a test.'}
+        response = self.client.post('/api/send_push_message/', request)
+        self.assertEqual(response.status_code, 404)

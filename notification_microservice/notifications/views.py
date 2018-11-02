@@ -65,21 +65,11 @@ def send_push_message(request):
     try:
         response = PushClient().publish(
             PushMessage(to=user_token, title=title, body=message))
-    except PushServerError:
-        return Response("Push Server Error", status.HTTP_502_BAD_GATEWAY)
-    except (ConnectionError, HTTPError):
-        return Response("Could not connect to ExpoSever", status.HTTP_502_BAD_GATEWAY)
-    except (ValueError):
-        return Response("Recipient not registered", status.HTTP_404_NOT_FOUND)
+    except:
+        return Response({'error':'Ocorreu algum erro não esperado.'}, status=HTTP_404_NOT_FOUND)
     try:
         response.validate_response()
-    except DeviceNotRegisteredError:
-        return Response("Recipient not registered", status.HTTP_404_NOT_FOUND)
-    except MessageTooBigError:
-        return Response("Message too big", status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
-    except MessageRateExceededError:
-        return Response("Error", status.HTTP_503_SERVICE_UNAVAILABLE)
-    except PushResponseError:
-        return Response("Recipient not registered", status.HTTP_404_NOT_FOUND)
+    except:
+        return Response({'error':'Ocorreu algum erro não esperado.'}, status=HTTP_400_BAD_REQUEST)
 
     return Response(status=HTTP_200_OK)
