@@ -69,9 +69,11 @@ deploy to production:
 #     - sh run-deploy.sh staging
 
 deploy to heroku:
+  before_script:
+    - gem install dpl
   stage: deploy
   script:
-  - gem install dpl
+  - sh heroku-helper.sh
   - cd notification_microservice && dpl --provider=heroku --app=notification-microservice --api-key=$HEROKU_DEV_KEY
   only:
   - dev
