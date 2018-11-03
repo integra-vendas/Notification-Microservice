@@ -66,10 +66,10 @@ def send_push_message(request):
         response = PushClient().publish(
             PushMessage(to=user_token, title=title, body=message))
     except:
-        return Response({'error':'Ocorreu algum erro não esperado.'}, status=HTTP_404_NOT_FOUND)
+        return Response({'error':'Não foi possível enviar notificação ao vendedor.'}, status=HTTP_404_NOT_FOUND)
     try:
         response.validate_response()
     except:
-        return Response({'error':'Ocorreu algum erro não esperado.'}, status=HTTP_400_BAD_REQUEST)
+        return Response({'error':'Não foi possível validar o token de notificação.'}, status=HTTP_400_BAD_REQUEST)
 
     return Response(status=HTTP_200_OK)
