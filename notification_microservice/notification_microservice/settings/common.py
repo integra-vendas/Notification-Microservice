@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from decouple import config
+from notification_microservice.file_helper import file_get_contents
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -96,3 +99,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+NOTIFICATIONS_DEFAULT_DOMAIN = config('NOTIFICATIONS_DOMAIN', default='http://localhost:8003')
+
+VERSION = config('VERSION', default='0.0')
+
+if VERSION == "0.0":
+    try:
+        VERSION = file_get_contents("../VERSION")
+    except:
+        VERSION = "-1"

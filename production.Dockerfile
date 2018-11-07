@@ -1,9 +1,8 @@
 FROM python:3.5.6-slim-stretch
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /code
-
-ADD ./notification_microservice /code
+ADD . /code
+WORKDIR /code/notification_microservice
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements/prod.txt
