@@ -21,3 +21,15 @@ production:
 
 down:
 	docker-compose down
+
+check-docker-production:
+	make production &
+	sleep 60
+	bash check-container.sh
+	docker-compose -f docker-compose-production.yml down
+
+check-docker-dev:
+	make &
+	sleep 60
+	bash check-container.sh
+	make down

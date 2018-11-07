@@ -1,21 +1,36 @@
-
 language: python
 python:
   - "3.4"
 
-cache: pip
-
-install:
-  - pip install -r notification_microservice/requirements/dev.txt
-
-virtualenv:
-  system_site_packages: true
-
 stages:
+  - check-container
   - test
 
 jobs:
   include:
-    - stage: "Tests"
+    - stage: check-container
+      sudo: required
+      services:
+        - docker
+      name: "Checking Production Container Run"
+      script:
+        - make check-docker-production
+
+    - stage: check-container
+      sudo: required
+      services:
+        - docker
+      name: "Checking Development Container Run"
+      script:
+        - make check-docker-dev
+
+    - stage: test
+      virtualenv:
+        system_site_packages: true
+      cache: pip
+      install:
+        - pip install -r notification_microservice/requirements/dev.txt
       name: "Unit Tests"
       script: sh run-tests.sh
+
+    
