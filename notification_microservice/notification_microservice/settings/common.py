@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +100,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+NOTIFICATIONS_DEFAULT_DOMAIN = config('NOTIFICATIONS_DOMAIN', default='http://localhost:8003')
 
 VERSION = config('VERSION', default='0.0')
 
