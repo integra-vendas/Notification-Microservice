@@ -35,7 +35,6 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
-notification/migrations/
 build/
 develop-eggs/
 dist/
@@ -85,8 +84,6 @@ target/
 *.pyc
 __pycache__/
 local_settings.py
-/notification_microservice/notifications/migrations/*
-/notification_microservice/*/migrations/*
 
 # Virtualenv
 /env
