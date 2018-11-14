@@ -1,3 +1,5 @@
+set -e
+
 cd notification_microservice
 pip install -r requirements/dev.txt
 python manage.py makemigrations
