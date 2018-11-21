@@ -68,12 +68,12 @@ deploy to production:
 #     - sh install-kubectl.sh
 #     - sh run-deploy.sh staging
 
-deploy to heroku:
-  before_script:
-    - gem install dpl
-  stage: deploy
-  script:
-  - sh heroku-helper.sh
-  - cd notification_microservice && dpl --provider=heroku --app=notification-microservice --api-key=$HEROKU_DEV_KEY
-  only:
-  - dev
+# deploy to heroku:
+#   before_script:
+#     - gem install dpl
+#   stage: deploy
+#   script:
+#   - . ./heroku-helper.sh
+#   - cd notification_microservice && dpl --provider=heroku --app=notification-microservice --api-key=$HEROKU_DEV_KEY
+#   only:
+#   - dev

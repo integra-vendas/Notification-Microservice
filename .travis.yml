@@ -3,12 +3,12 @@ python:
   - "3.4"
 
 stages:
-  - check-container
   - test
+  - deploy
 
 jobs:
   include:
-    - stage: check-container
+    - stage: test
       sudo: required
       services:
         - docker
@@ -16,7 +16,7 @@ jobs:
       script:
         - make check-docker-production
 
-    - stage: check-container
+    - stage: test
       sudo: required
       services:
         - docker
@@ -33,4 +33,14 @@ jobs:
       name: "Unit Tests"
       script: sh run-tests.sh
 
-    
+    - stage: deploy
+      install: npm install -g heroku
+      name: "Deploying to Staging"
+      only:
+        - dev
+      script:
+        - . ./heroku-helper.sh
+        - updateVersion
+        - loginHeroku $EMAIL_HEROKU $HEROKU_TOKEN
+        - deployMaster $HEROKU_APP notification_microservice
+
